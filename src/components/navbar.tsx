@@ -1,36 +1,29 @@
-import {
-  RegisterLink,
-  LoginLink,
-  LogoutLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
-import { Button } from "./ui/button";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import Link from "next/link";
+import Image from "next/image";
+import DesktopLogo from "../../public/airbnb-desktop.png";
+import MobileLogo from "../../public/airbnb-mobile.webp";
+import UserNav from "./nav-user";
 
-export default async function Navbar() {
-  const { isAuthenticated } = getKindeServerSession();
+export default function Navbar() {
   return (
-    <nav className="flex justify-between items-center">
-      <div>
-        <h1 className="font-semibold">Airbnb Clone</h1>
+    <nav className="w-full border-b">
+      <div className="flex items-center justify-between container mx-auto px-5 lg:px-10 py-5">
+        <Link href="/">
+          <Image
+            src={DesktopLogo}
+            alt="Desktop Logo"
+            className="w-32 hidden lg:block"
+          />
+
+          <Image
+            src={MobileLogo}
+            alt="Mobile Logo"
+            className="block lg:hidden w-12"
+          />
+        </Link>
+
+        <UserNav />
       </div>
-
-      {(await isAuthenticated()) ? (
-        <div>
-          <LogoutLink>
-            <Button>Logout</Button>
-          </LogoutLink>
-        </div>
-      ) : (
-        <div className="flex gap-x-2">
-          <RegisterLink>
-            <Button>Register</Button>
-          </RegisterLink>
-
-          <LoginLink>
-            <Button variant="secondary">Login</Button>
-          </LoginLink>
-        </div>
-      )}
     </nav>
   );
 }
