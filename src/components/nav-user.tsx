@@ -13,6 +13,7 @@ import {
   LogoutLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { MenuIcon } from "lucide-react";
+import { createHome } from "@/app/action";
 
 export default async function UserNav() {
   const { getUser } = getKindeServerSession();
@@ -38,9 +39,12 @@ export default async function UserNav() {
         {user ? (
           <>
             <DropdownMenuItem>
+              <form action={createHome}>
+                <input type="hidden" name="userId" value={user.id}/>
               <button type="submit" className="w-full text-start">
                 Airbnb your Home
               </button>
+              </form>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link href="/my-homes" className="w-full">

@@ -19,7 +19,27 @@ model User{
   lastname String
   email String
   profilepicture String?
+  home Home[]
+  createdAt DateTime @default(now())
+}
 
+model Home{
+  id String @id @default(uuid())
+  title String?
+  description String?
+  bedrooms String?
+  bathrooms String?
+  country String?
+  photo String?
+  price Int?
+  category String?
+
+  isCategory Boolean @default(false)
+  isDescription Boolean @default(false)
+  isLocation Boolean @default(false)
+
+  userId String?
+  user User? @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
 
 }
