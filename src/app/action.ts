@@ -1,6 +1,7 @@
 "use server"
 
 import prisma from "@/lib/db";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
 // user->Your airbnb home -> createHome(API endpoint)
@@ -14,7 +15,8 @@ export async function createHome(formData: FormData) {
   const userId = formData.get("userId") as string;
 
   if (!userId) {
-    return redirect("/api/auth/login");
+    return redirect("/api/auth/login")
+
   }
 
   const data = await prisma.home.findFirst({
@@ -48,4 +50,30 @@ export async function createHome(formData: FormData) {
     });
     return redirect(`/create/${data.id}/category`);
   }
+}
+
+export async function createCategory(formData:FormData){
+  const {getUser} = getKindeServerSession()
+  const user = await getUser()
+
+  if(!user){
+    return redirect("/api/auth/login")
+  }
+
+  const homeId = formData.get("homeId") as string
+
+  const categoryName = formData.get("categoryName") as string
+
+  const data = await prisma.home.update({
+    where:{
+      id:homeId,
+    },
+    data:{
+      category: categoryName,
+      isCategory: true
+    }
+  })
+
+  return redirect(`/create/${homeId}/description`);
+
 }
