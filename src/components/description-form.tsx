@@ -7,12 +7,13 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { useState } from "react";
+import createDescription from "@/app/action";
 
 export default function DescriptionForm({ homeId }: { homeId: string }) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   return (
-    <form action="">
+    <form action={createDescription}>
       <input type="hidden" name="homeId" value={homeId} />
       <input type="hidden" value={imageUrl ?? undefined} name="imageUrl" />
       <div className="mx-auto w-3/5 mt-10 flex flex-col gap-y-5 mb-36">

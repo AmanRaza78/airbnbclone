@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import prisma from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
@@ -15,8 +15,7 @@ export async function createHome(formData: FormData) {
   const userId = formData.get("userId") as string;
 
   if (!userId) {
-    return redirect("/api/auth/login")
-
+    return redirect("/api/auth/login");
   }
 
   const data = await prisma.home.findFirst({
@@ -52,28 +51,63 @@ export async function createHome(formData: FormData) {
   }
 }
 
-export async function createCategory(formData:FormData){
-  const {getUser} = getKindeServerSession()
-  const user = await getUser()
+export async function createCategory(formData: FormData) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
 
-  if(!user){
-    return redirect("/api/auth/login")
+  if (!user) {
+    return redirect("/api/auth/login");
   }
 
-  const homeId = formData.get("homeId") as string
+  const homeId = formData.get("homeId") as string;
 
-  const categoryName = formData.get("categoryName") as string
+  const categoryName = formData.get("categoryName") as string;
 
   const data = await prisma.home.update({
-    where:{
-      id:homeId,
+    where: {
+      id: homeId,
     },
-    data:{
+    data: {
       category: categoryName,
-      isCategory: true
-    }
-  })
+      isCategory: true,
+    },
+  });
 
   return redirect(`/create/${homeId}/description`);
+}
 
+export default async function createDescription(formData: FormData) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user) {
+    return redirect("/api/auth/login");
+  }
+
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const price = formData.get("price");
+  const guests = formData.get("guest") as string;
+  const bathrooms = formData.get("bathroom") as string;
+  const bedrooms = formData.get("room") as string;
+  const photo = formData.get("imageUrl") as string;
+  const homeId = formData.get("homeId") as string;
+
+  const data = await prisma.home.update({
+    where: {
+      id: homeId,
+    },
+    data: {
+      title: title,
+      description: description,
+      price: Number(price),
+      bedrooms: bedrooms,
+      bathrooms: bathrooms,
+      guests: guests,
+      photo: photo,
+      isDescription: true,
+    },
+  });
+
+  return redirect(`/create/${homeId}/location`);
 }
